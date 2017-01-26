@@ -1,12 +1,20 @@
 module clockDivider(dclock, clock);
+parameter cycle = 50000000/(2*1000000);
 output dclock;
 input clock;
-wire [3:0] d;
-reg enable = 1'b1;
-reg nreset = 1'b1;
-counter #(4) c(d,clock,nreset,enable);
-always(posedge clock)
+wire [4:0] d;
+reg enable = 5'b00001;
+reg nreset = 5'b00000;
+reg dclock = 0;
+counter #(5) c(d,clock,nreset,enable);
+always @(posedge clock)
 	begin
-		dclock = d[3];
+		if(d == cycle-1)
+			begin
+				nreset = 0 ;
+				dclock = ~dclock;
+			end
+		else nreset =1;
+		
 	end
 endmodule
