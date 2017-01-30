@@ -24,6 +24,7 @@ module vendingMachine(tea_out,soda_out,juice_out,c10,c5,c2,c1,
 tea,soda,juice,b10,b5,b2,b1,clock,reset);
 output tea_out,soda_out,juice_out,c10,c5,c2,c1;
 input tea,soda,juice,b10,b5,b2,b1,clock,reset;
+reg [4:0] balance;
 wire ptea,psoda,pjuice,p10,p5,p2,p1;
 singlePulser sp_tea(ptea,tea,clock);
 singlePulser sp_soda(psoda,soda,clock);
