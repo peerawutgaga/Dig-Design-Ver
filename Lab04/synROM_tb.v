@@ -29,11 +29,12 @@ initial
         $dumpfile("test.vcd");
         $dumpvars(0,r);
         clk = 0;
-        addr = 10'd1023;
-        for(i=1023;i>=0;i = i-1)
+        #10 addr = 10'd1023;
+        for(i=1023;i>0;i = i-1)
         begin
-            #10 addr = addr - 10'd1;
+            #20 addr = addr - 10'd1;
         end
+        #50 $finish;
      end
 always
     begin
