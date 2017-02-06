@@ -13,19 +13,14 @@ assign data_0 = oe_0 ? ram[address_0] : 8'bZ;
 assign data_1 = oe_1 ? ram[address_1] : 8'bZ;
 always @(posedge clk)
 	begin
-		if(we_0 && we_1) 
+		if(we_0) 
 			begin
 				ram[address_0] = data_0;
 			end
-		else if(we_0 && ~we_1) 
-			begin
-				ram[address_0] = data_0;
-			end
-		else if(~we_0 && we_1) 
+		else if(we_1) 
 			begin
 				ram[address_1] = data_1;
 			end
-		
-		
+			
 	end
 endmodule
