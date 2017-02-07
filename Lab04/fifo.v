@@ -6,61 +6,39 @@ input clk,rst,rd_en,wr_en;
 input [DATA_WIDTH - 1:0] data_in;
 output empty,full;
 output [DATA_WIDTH - 1:0] data_out;
-reg [ADDR_WIDTH-1:0] mem[0:RAM_DEPTH -1];
-reg [ADDR_WIDTH :0] size = 8'd0;
-reg [ADDR_WIDTH-1:0] head = 8'd0;
-reg [ADDR_WIDTH-1:0] tail = 8'd0;
-reg [ADDR_WIDTH-1:0] data_out = 8'd0;
-wire [DATA_WIDTH - 1:0] data_ram;
-DualPortRAM dpr(clk,tail,data_in,~wr_en,1'b0,head,data_ram,1'b0,rd_en);
-assign full = (size==RAM_DEPTH-1);
-assign empty = (size==9'd0);
-always @(posedge clk or rst)
-	begin
-	if(rst)
-		begin
-			tail <= 8'd0;
-		end
-	else if(~wr_en)
-		begin
-			tail <= tail + 8'd1;
-		end
-	end
-always @(posedge clk or rst)
-	begin
-	if(rst)
-		begin
-			head <= 8'd0;
-		end
-	else if(rd_en)
-		begin
-			head <= head + 8'd1;
-		end
-	end
-always @(posedge clk or rst)
-	begin
-	if(rst)
-		begin
-			data_out <= 8'd0;
-		end
-	else if(rd_en)
-		begin
-			data_out <= data_ram;
-		end
-	end
+reg [ADDR_WIDTH :0] size;
+reg [ADDR_WIDTH-1:0] head;
+reg [ADDR_WIDTH-1:0] tail;
+reg [ADDR_WIDTH-1:0] mem [0:RAM_DEPTH-1];
+integer i;
+assign full = (size == RAM_DEPTH);
+assign empty = (size == 9'd0);
+assign data_out = mem[head];
 always @(posedge clk or rst)
 	begin
 		if(rst)
 			begin
-				size <= 9'd0;
+				head = 0;
+				tail = 0;
+				size = 0;
+				for(i=0;i<RAM_DEPTH;i = i+1)
+				begin
+					mem[i] = 8'bz;
+				end
 			end
-		else if(rd_en && wr_en && size != 0)
-			begin 
-				size <= size - 9'd1;
-			end
-		else if(rd_en && wr_en && size != 0)
-			begin 
-				size <= size + 9'd1;
+		else
+			begin
+				if(rd_en && ~empty)
+					begin
+						head = head + 1;
+						size = size - 1;
+					end
+				else if(~wr_en && ~full)
+					begin
+						mem[tail] = data_in;
+						tail = tail + 1;
+						size = size + 1;
+					end
 			end
 	end
 endmodule
