@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 03/08/2017 07:18:55 PM
+// Create Date: 03/10/2017 07:32:15 PM
 // Design Name: 
-// Module Name: Counter
+// Module Name: ClickCounter
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,15 +20,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Counter(seg,an,dp,clock,BtnC);
+module ClickCounter(seg,an,dp,clock,BtnC,BtnL);
 output [6:0] seg;
 output [3:0] an;
 output dp;
-input clock,BtnC;
-reg [15:0] q;
-bin_to_decimal u1 (
-   
-   .B(q), 
+input BtnC;
+input BtnL;
+input clock;
+reg [15:0] B;
+wire[19:0] bcdout;
+bin_to_decimal u1 ( 
+   .B(B), 
    .bcdout(bcdout)
    );  
 seg7decimal u7 (
@@ -39,9 +41,13 @@ seg7decimal u7 (
    .an(an),
    .dp(dp)
    );
-always @(posedge clock or BtnC)
+wire sig;
+reg q;
+Debouncer d(sig,clock,BtnL);
+singlePulser s(q,sig,clock);
+always @(BtnC or q)
 begin
-    if(BtnC) q = 15'd0;
-    else q = q + 15'd1;
+  if(BtnC) B = 15'd0;
+  else if(q) B = B+15'd1;
 end
 endmodule

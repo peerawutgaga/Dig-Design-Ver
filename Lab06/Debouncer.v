@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 03/08/2017 07:18:55 PM
+// Create Date: 03/10/2017 07:48:56 PM
 // Design Name: 
-// Module Name: Counter
+// Module Name: Debouncer
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,28 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Counter(seg,an,dp,clock,BtnC);
-output [6:0] seg;
-output [3:0] an;
-output dp;
-input clock,BtnC;
-reg [15:0] q;
-bin_to_decimal u1 (
-   
-   .B(q), 
-   .bcdout(bcdout)
-   );  
-seg7decimal u7 (
-   .x(bcdout),
-   .clk(clk),
-   .clr(btnC),
-   .a_to_g(seg),
-   .an(an),
-   .dp(dp)
-   );
-always @(posedge clock or BtnC)
+module Debouncer(
+output out,
+input clock,
+input in
+    );
+reg temp;
+reg out;
+always @(posedge clock)
 begin
-    if(BtnC) q = 15'd0;
-    else q = q + 15'd1;
+    if(temp == in) out = in;
+    else temp = in;
 end
 endmodule
