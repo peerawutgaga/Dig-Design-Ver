@@ -25,11 +25,28 @@ output out,
 input clock,
 input in
     );
-reg temp;
+reg ;
 reg out;
 always @(posedge clock)
 begin
-    if(temp == in) out = in;
-    else temp = in;
+if(in)
+    begin
+        i=i+1;
+        if(i==24'd5000000)
+        begin
+            out = 1;
+            hold = 1;
+        end
+        else
+        begin
+            out = 0;
+        end
+    end
+    else
+    begin
+        out = 0;
+        hold = 0;
+        i = 0;
+    end
 end
 endmodule
