@@ -5,7 +5,7 @@ module Stack (seg,an,dp,clk,BtnL,BtnR,sw);
     input BtnR; //pop
     input [15:0] sw;
     output [6:0] seg;
-    output an;
+    output [4:0]an;
     output dp;
 reg [15:0]q;
 reg [7:0] mem [0:255];
