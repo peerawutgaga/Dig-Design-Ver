@@ -25,8 +25,9 @@ output out,
 input clock,
 input in
     );
-reg ;
+reg hold;
 reg out;
+integer i;
 always @(posedge clock)
 begin
 if(in)
